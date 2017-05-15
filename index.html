@@ -1,0 +1,62 @@
+<html>
+
+    <head>
+        <title>マサヤ</title>
+
+        <!---->
+        <!--スタイルシートの編集-->
+        <style type="text/css">
+            #bg{
+                border: 1px solid gray;
+                width: 800px;
+                height: 600px;
+                background-image: url(image/bg/BG001.jpg);
+            }
+
+            #serifu{
+                border: 1px solid blue;
+                width: 700px;
+                height: 230px;
+
+                position: relative;
+                top: 350px;
+                left: 50px;
+
+                background-color: rgba(255,255,255,0.7);
+            }
+        </style>
+    </head>
+
+    <body>
+        <form>
+            <button id="sunset">夕焼け</button>
+
+        </form>
+        <div id="bg">
+            <div id="serifu">serifu</div>
+        </div>
+        
+        <script src="js/jquery.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                <!--ボタンの入力を検知-->
+                $("#sunset").on("click", function(){
+                    <!--背景を変更する-->
+                    $("#bg").css(   "background-image", 
+                                "url(image/bg/BG002.jpg)");
+
+                return(false);
+            });
+
+                
+
+                
+            });
+
+        </script>
+
+    </body>
+
+</html>
+
+
