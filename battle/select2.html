@@ -1,0 +1,55 @@
+<html>
+
+    <head>
+        <title>	選択 </title>
+				
+        <!---->
+        <!--スタイルシートの編集-->
+        <style type="text/css">
+            #bg{
+                border: 1px solid gray;
+                width: 800px;
+                height: 600px;
+                background-image: url(../image/bg/BG001.jpg);
+            }
+
+            #serifu{
+                border: 1px solid blue;
+                width: 700px;
+                height: 230px;
+
+                position: relative;
+                top: 350px;
+                left: 50px;
+
+                background-color: rgba(255,255,255,0.7);
+            }
+        </style>
+
+				<script src="js/jquery.min.js"></script>
+        <script>
+            function answer1(){
+								location.href = "gameclear.html";
+						}
+						
+						function answer2(){
+								location.href = "gameover.html"
+						}
+        </script>
+    </head>
+
+    <body>
+        <div id="bg">						
+            <div id="serifu">
+						面接官「ゴミ」<br>
+						&lt2/2&gt
+								<form>
+									  <input type="button" value="ぶん殴る" onclick="answer1();"</button> <br>
+									  <input type="button" value="なにもしない" onclick="answer2();"</button>
+								</form>
+						</div>
+        </div>
+		
+    </body>
+
+</html>
