@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>event</title>
+
+<link href="https://fonts.googleapis.com/earlyaccess/roundedmplus1c.css" rel="stylesheet" />
+<style type="text/css">
+#canvas{
+	width: 800px;
+	height: 600px;
+	border: 1px solid gray;
+}
+#chara{
+  position: absolute;
+  top: 20px;
+  left: 240px;
+
+	width: 300px;
+	height: 300px;
+}
+#text{
+	position: absolute;
+	top: 360px;
+	left: 100px;
+
+	width: 600px;
+	height: 200px;
+	border: 1px solid blue;
+	background-color: rgba(255, 255, 255, 0.86);
+	padding: 10px;
+	user-select: none;
+	font-family: "メイリオ";
+	font-size: 18pt;
+}
+#senntaku{
+	width: 600px;
+	height: 200px;
+}
+</style>
+</head>
+<body>
+<div id="canvas">
+  <div id="chara">
+  </div>
+  <div id="text">
+	</div>
+</div>
+
+<script src="./js/jquery.min.js"></script>
+<script>
+
+var knowledge = 100;
+var communication = 100;
+
+var SCENARIO1 = [
+	  {com:"BG", val:"url(./image/bg/kyoushitsu1.jpg)"}
+	, {com:"S",  val:"放課後。。。"}
+	, {com:"S",  val:"？？？<br>マサヤくーん。"}
+  , {com:"T",  val:"url(./image/chara/hiroinn1.png)"}
+	, {com:"TS", img:"url(./image/chara/hiroinn2.png)" ,text:"？？？<br>えっへへー。<br>ちょっと教えてほしいことがあって声かけちゃったー。"}
+	, {com:"S",  val:"マサヤ<br>君はたしか・・・うんこたれぞう？"}
+	, {com:"TS", img:"url(./image/chara/hiroinn4.png)" ,text:"？？？<br>（マサヤ君って、結構やばめの人だったんだー・・・）"}
+	, {com:"TS", img:"url(./image/chara/hiroinn3.png)" ,text:"アオイ<br>違うちがーう！<br>あたしはアオイって名前だよ。<br>隣の席なんだからおぼえてよぉー。"}
+	, {com:"TS", img:"url(./image/chara/hiroinn1.png)" ,text:"アオイ<br>んで、これを教えてほしいんだけど・・・"}
+	, {com:"TS", img:"url(./image/chara/none.png)" ,text:"２０分後。。。"}
+	, {com:"TS", img:"url(./image/chara/hiroinn1.png)", text:"マサヤ<br>こんな説明だけどわかってもらえた？"}
+	, {com:"TS", img:"url(./image/chara/hiroinn2.png)" ,text:"アオイ<br>すごーく分かりやすかった！<br>これからもよろしくね！"}
+	, {com:"S",  val:"知識が１０上がった！<br>コミュ力が１０上がった！"}
+	, {com:"UP",  knowledge:10, communication:10}
+];
+
+var SCENARIO2 = [
+	  {com:"BG", val:"url(./image/bg/room1.jpg)"}
+];
+
+var SCENARIO3 = [
+	  {com:"BG", val:"url(./image/bg/room1.jpg)"}
+];
+
+//実際に実行するシナリオ
+var SCENARIO = SCENARIO1;
+
+var Novel = {
+	  cursor: 0
+	, max: 0
+	, init: function(){
+		this.max = SCENARIO.length;
+		this.play();
+	}
+	, play: function(){
+		if( this.cursor >= this.max ){
+			return(false);
+		}
+		switch(SCENARIO[this.cursor].com){
+      // 人物登場
+      case "T":
+        $("#chara").css("background-image", SCENARIO[this.cursor].val);
+        this.cursor++;
+        break;
+			// セリフ再生
+			case "S":
+				$("#text").html(SCENARIO[this.cursor].val);
+				this.cursor++;
+				break;
+			// 人物登場
+	    case "TS":
+	      $("#chara").css("background-image", SCENARIO[this.cursor].img);
+				$("#text").html(SCENARIO[this.cursor].text);
+	      this.cursor++;
+	      break;
+      // ステータス表示
+  		case "STATUS":
+  				$("#text").html(
+						SCENARIO[this.cursor].text + "<br>" +
+						"知識：" + SCENARIO[this.cursor].knowledge + "<br>" +
+						"コミュ力：" + SCENARIO[this.cursor].communication
+					);
+  				this.cursor++;
+  				break;
+			// ステータスアップ
+			case "UP":
+				knowledge += SCENARIO[this.cursor].knowledge;
+				communication += SCENARIO[this.cursor].communication;
+				this.cursor++;
+				break;
+
+			// 背景変更
+			case "BG":
+				$("#canvas").css("background-image", SCENARIO[this.cursor].val);
+				this.cursor++;
+				Novel.play();
+				break;
+
+			default:
+				break;
+		}
+	}
+};
+
+$(document).ready(function(){
+	Novel.init();
+
+	$("#text")
+		.on("click", function(){
+			Novel.play();
+		});
+});
+
+</script>
+</body>
+</html>
