@@ -45,14 +45,21 @@
 
 <script src="./js/jquery.min.js"></script>
 <script>
+
+var knowledge = 100;
+var communication = 100;
+
 var SCENARIO = [
 	  {com:"BG", val:"url(./image/bg/room1.jpg)"}
   , {com:"T",  val:"url(./image/chara/mennsetu1.jpg)"}
-	, {com:"S",  val:"面接官<br>それでは、面接を始めます。よろしくおねがいします。"}
-	, {com:"S",  val:"マサヤ<br>よろしくおねがいします。"}
-	, {com:"S",  val:"どこで生れたかとんと見当けんとうがつかぬ。何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している"}
-	, {com:"S",  val:"吾輩はここで始めて人間というものを見た。しかもあとで聞くとそれは書生という人間中で一番獰悪どうあくな種族であったそうだ。この書生というのは時々我々を捕つかまえて煮にて食うという話である。"}
+	, {com:"S",  val:"面接官<br>それでは、面接を始めます。よろしくお願いします。"}
+	, {com:"S",  val:"マサヤ<br>よろしくお願いします。"}
+	, {com:"S",  val:"面接官<br>それでは、自己ＰＲをお願いします。"}
+  , {com:"ST", text:"マサヤ<br>私はステータスに自信があります。ステータスはご覧の通りです。" , knowledge:knowledge , communication:communication}
+	, {com:"S",  val:"面接官<br>わかりました。では、いくつか質問をさせていただきます。"}
+	, {com:"S",  val:"面接官<br>わかりました。では、いくつか質問をさせていただきます。"}
 ];
+
 var Novel = {
 	  cursor: 0
 	, max: 0
@@ -75,6 +82,19 @@ var Novel = {
 				$("#serif").html(SCENARIO[this.cursor].val);
 				this.cursor++;
 				break;
+      // ステータス表示
+  		case "ST":
+  				$("#serif").html(
+						SCENARIO[this.cursor].text + "<br>" +
+						"知識：" + SCENARIO[this.cursor].knowledge + "<br>" +
+						"コミュ力：" + SCENARIO[this.cursor].communication
+					);
+  				this.cursor++;
+  				break;
+      case "CO":
+      		$("#serif").html("コミュ力：" + SCENARIO[this.cursor].val);
+      		this.cursor++;
+      		break;
 			// 背景変更
 			case "BG":
 				$("#canvas").css("background-image", SCENARIO[this.cursor].val);
@@ -87,6 +107,7 @@ var Novel = {
 		}
 	}
 };
+
 $(document).ready(function(){
 	Novel.init();
 
@@ -95,6 +116,7 @@ $(document).ready(function(){
 			Novel.play();
 		});
 });
+
 </script>
 </body>
 </html>
