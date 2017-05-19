@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>training</title>
+
+<link href="https://fonts.googleapis.com/earlyaccess/roundedmplus1c.css" rel="stylesheet" />
+<style type="text/css">
+#canvas{
+	width: 800px;
+	height: 600px;
+	border: 1px solid gray;
+}
+#status{
+  position: absolute;
+  top: 30px;
+  left: 600px;
+
+	width: 180px;
+	height: 100px;
+	background-color: rgba(255, 255, 255, 0.86);
+	border: 1px solid gray;
+
+	font-size: 12pt;
+}
+#study{
+	position: absolute;
+  top: 180px;
+  left: 20px;
+
+	width: 160px;
+	height: 160px;
+}
+#talk{
+	position: absolute;
+  top: 180px;
+  left: 220px;
+
+	width: 160px;
+	height: 160px;
+}
+#game{
+	position: absolute;
+  top: 180px;
+  left: 420px;
+
+	width: 160px;
+	height: 160px;
+}
+#rest{
+	position: absolute;
+  top: 180px;
+  left: 620px;
+
+	width: 160px;
+	height: 160px;
+}
+
+#text{
+	position: absolute;
+	top: 360px;
+	left: 100px;
+
+	width: 600px;
+	height: 200px;
+	border: 1px solid blue;
+	background-color: rgba(255, 255, 255, 0.86);
+	padding: 10px;
+	user-select: none;
+	font-family: "メイリオ";
+	font-size: 18pt;
+}
+
+</style>
+</head>
+<body>
+<div id="canvas">
+  <div id="status">
+  </div>
+
+	<div id="study">
+	</div>
+	<div id="talk">
+	</div>
+	<div id="game">
+	</div>
+	<div id="rest">
+	</div>
+  <div id="text">
+	</div>
+</div>
+
+<script src="./js/jquery.min.js"></script>
+<script>
+
+var knowledge = 10;
+var communication = 10;
+var mental = 50;
+var hp = 100;
+
+
+var Novel = {
+	  cursor: 0
+	, max: 0
+	, init: function(){
+		$("#canvas").css("background-image", "url(./image/bg/gakko.jpg)");
+		$("#status").html(
+			"知識：" + knowledge + "<br>" +
+			"コミュ力：" + communication  + "<br>" +
+			"メンタル：" + mental  + "<br>" +
+			"体力：" + hp
+		);
+		$("#text").html("行動を選んでください。");
+		this.iconset();
+
+		this.play();
+		}
+	, play: function(){
+
+		}
+	, iconset: function(){
+			$("#study").css("background-image", "url(./image/icon/study.png)");
+			$("#talk").css("background-image", "url(./image/icon/talk.png)");
+			$("#game").css("background-image", "url(./image/icon/game.png)");
+			$("#rest").css("background-image", "url(./image/icon/rest.png)");
+		}
+	,	icondelete: function(){
+			$("#study").css("background-image", "url(./image/icon/none.png)");
+			$("#talk").css("background-image", "url(./image/icon/none.png)");
+			$("#game").css("background-image", "url(./image/icon/none.png)");
+			$("#rest").css("background-image", "url(./image/icon/none.png)");
+		}
+	};
+
+
+var selected = false;
+var count = 0;
+
+$(document).ready(function(){
+	Novel.init();
+
+	$("#study")
+		.on("click", function(){
+			if(hp <= 0) return;
+
+			Novel.icondelete();
+			$("#canvas").css("background-image", "url(./image/bg/kyoushitsu1.jpg)");
+			$("#text").html("授業を受けた。<br>知識が１０上がった！");
+			knowledge += 10;
+			hp -= 12;
+			selected = true;
+	});
+
+	$("#talk")
+		.on("click", function(){
+			if(hp <= 0) return;
+
+			Novel.icondelete();
+			$("#canvas").css("background-image", "url(./image/bg/kyoushitsu2.jpg)");
+			$("#text").html("クラスの人たちと雑談した。<br>コミュ力が１０上がった！");
+			communication += 10;
+			hp -= 12;
+			selected = true;
+	});
+
+	$("#game")
+		.on("click", function(){
+			if(hp <= 0) return;
+
+			Novel.icondelete();
+			$("#canvas").css("background-image", "url(./image/bg/gesen.jpg)");
+			$("#text").html("ゲームをした。<br>知識が４上がった！<br>コミュ力が１上がった！");
+			knowledge += 5;
+			communication += 1;
+			hp -= 8;
+			selected = true;
+	});
+
+	$("#rest")
+		.on("click", function(){
+			if(hp <= 0) return;
+
+			Novel.icondelete();
+			$("#canvas").css("background-image", "url(./image/bg/bed.jpg)");
+			$("#text").html("家で休んだ。<br>体力が回復した！");
+			hp += 30;
+			if(hp > 100)
+				hp = 100;
+			selected = true;
+	});
+
+	$("#text")
+		.on("click", function(){
+			if(selected){
+				if(hp <= 0){
+					$("#text").html("疲れ果てたマサヤは退学してしまった！！<br>ゲームオーバー");
+					selected = false;
+				}
+				else {
+					Novel.iconset();
+					$("#status").html(
+								"知識：" + knowledge + "<br>" +
+								"コミュ力：" + communication  + "<br>" +
+								"メンタル：" + mental  + "<br>" +
+								"体力：" + hp);
+					$("#canvas").css("background-image", "url(./image/bg/gakko.jpg)");
+					$("#text").html("行動を選んでください。");
+					selected = false;
+					count++;
+				}
+
+				if(count > 36){
+					//ここでバトルシーンへ移行
+					$("#text").html("バトルシーンへ移行");
+				}
+			}
+
+			if(!selected)
+			{
+				//ここでタイトルに戻る
+			}
+	});
+
+
+
+});
+
+</script>
+</body>
+</html>
