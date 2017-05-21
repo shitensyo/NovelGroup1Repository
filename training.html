@@ -11,6 +11,19 @@
 	height: 600px;
 	border: 1px solid gray;
 }
+#count{
+  position: absolute;
+  top: 30px;
+  left: 30px;
+
+	width: 180px;
+	height: 40px;
+	background-color: rgba(255, 255, 255, 0.86);
+	border: 1px solid gray;
+
+	font-size: 24pt;
+}
+
 #status{
   position: absolute;
   top: 30px;
@@ -77,6 +90,8 @@
 <div id="canvas">
   <div id="status">
   </div>
+	<div id="count">
+	</div>
 
 	<div id="study">
 	</div>
@@ -97,6 +112,10 @@ var knowledge = 10;
 var communication = 10;
 var mental = 50;
 var hp = 100;
+var count = 0;
+
+//読み込み時の処理
+window.onload = DataReceive;
 
 
 var Novel = {
@@ -110,6 +129,7 @@ var Novel = {
 			"メンタル：" + mental  + "<br>" +
 			"体力：" + hp
 		);
+		$("#count").html(CountToYearMounth(count));
 		$("#text").html("行動を選んでください。");
 		this.iconset();
 
@@ -134,7 +154,6 @@ var Novel = {
 
 
 var selected = false;
-var count = 0;
 
 $(document).ready(function(){
 	Novel.init();
@@ -182,10 +201,12 @@ $(document).ready(function(){
 
 			Novel.icondelete();
 			$("#canvas").css("background-image", "url(./image/bg/bed.jpg)");
-			$("#text").html("家で休んだ。<br>体力が回復した！");
+			$("#text").html("家で休んだ。<br>メンタルと体力が回復した！");
 			hp += 30;
 			if(hp > 100)
 				hp = 100;
+
+			mental += 10;
 			selected = true;
 	});
 
@@ -204,9 +225,11 @@ $(document).ready(function(){
 								"メンタル：" + mental  + "<br>" +
 								"体力：" + hp);
 					$("#canvas").css("background-image", "url(./image/bg/gakko.jpg)");
+
 					$("#text").html("行動を選んでください。");
 					selected = false;
 					count++;
+					$("#count").html(CountToYearMounth(count));
 				}
 
 				if(count > 36){
@@ -220,10 +243,41 @@ $(document).ready(function(){
 				//ここでタイトルに戻る
 			}
 	});
-
-
-
 });
+
+//countを年月(文字列)に変換
+function CountToYearMounth(c){
+	if(c > 35)
+		c = 35;
+	var y = Math.floor( c / 12) + 1;
+	var m = c % 12 + 1;
+	return y + "年" + ":" + m + "ヶ月";
+}
+
+//遷移時のデータ受け取り
+function DataReceive(){
+	//?以降の文字を取得する
+	var data = location.search.substring(1, location.search.length);
+	//エスケープされた文字をアンエスケープする
+	data = unescape(data);
+	data = String(data);
+
+	var arr = "";
+	arr += data;
+	arr = arr.split(",");
+	knowledge = arr[0];
+	communication = arr[1];
+
+	alert(data);
+}
+
+
+//ページを遷移
+function Next(){
+	//データを次のファイルにエスケープして渡す。
+	var data = [knowledge , communication];
+	location.href = "./training.html?" + escape(data);
+}
 
 </script>
 </body>
