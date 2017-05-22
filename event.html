@@ -52,15 +52,16 @@
 
 var knowledge = 10;
 var communication = 10;
+var mental = 50;
+var hp = 100;
+var count = 0;
 
-/*
 //読み込み時の処理
 window.onload = DataReceive;
-*/
 
 var SCENARIO1 = [
 	  {com:"BG", val:"url(./image/bg/kyoushitsu1.jpg)"}
-	, {com:"S",  val:"放課後。。。"}
+	, {com:"S",  val:"ある日の放課後。。。"}
 	, {com:"S",  val:"？？？<br>マサヤくーん。"}
   , {com:"T",  val:"url(./image/chara/hiroinn1.png)"}
 	, {com:"TS", img:"url(./image/chara/hiroinn2.png)" ,text:"？？？<br>えっへへー。<br>ちょっと教えてほしいことがあって声かけちゃったー。"}
@@ -77,15 +78,94 @@ var SCENARIO1 = [
 ];
 
 var SCENARIO2 = [
-	  {com:"BG", val:"url(./image/bg/room1.jpg)"}
+	{com:"BG", val:"url(./image/bg/kyoushitsu1.jpg)"}
+	, {com:"S",  val:"ある日の放課後。。。"}
+	, {com:"TS", img:"url(./image/chara/sensei.png)" ,text:"先生<br>おつかれさま。勉強は順調かな？"}
+	, {com:"S",  val:"マサヤ<br>ああ、はい、ええ、まあ、はい、順調ですはい。"}
+	, {com:"S",  val:"先生<br>そうか、それはよかった。"}
+	, {com:"S",  val:"先生<br>ちゃんとC++やらないと、あとで痛い目みるからなぁ。"}
+	, {com:"S",  val:"先生と他愛のない会話をした。<br>コミュ力が１０上がった！"}
+	, {com:"UP",  knowledge:0, communication:10}
+	, {com:"NEXT"}
 ];
 
 var SCENARIO3 = [
-	  {com:"BG", val:"url(./image/bg/room1.jpg)"}
+	  {com:"BG", val:"url(./image/bg/kyoushitsu1.jpg)"}
+	, {com:"S",  val:"ある日の放課後。。。"}
+	, {com:"S",  val:"？？？<br>マサヤくーん。"}
+	, {com:"TS", img:"url(./image/chara/hiroinn1.png)" ,text:"アオイ<br>おつかれさまー。"}
+	, {com:"S",  val:"マサヤ<br>ああ、うん、お疲れ様、どうした？"}
+	, {com:"TS", img:"url(./image/chara/hiroinn4.png)" ,text:"アオイ<br>どうもこうもしないよー。ただのあいさつ。"}
+	, {com:"TS", img:"url(./image/chara/none.png)" ,text:"閑話休題。。。"}
+	, {com:"TS", img:"url(./image/chara/hiroinn1.png)" ,text:"アオイ<br>そういえば、今度クラスのみんなで焼肉屋さん行くことになったんだけど、マサヤくんも来るー？"}
+	, {com:"S", val:"マサヤ<br>んー、ああ、えーと・・・いこっかな・・・。"}
+	, {com:"TS", img:"url(./image/chara/hiroinn2.png)", text:"アオイ<br>ほんと！じゃあみんなに伝えておくね。<br>これで２０人になったよ！"}
+	, {com:"S", val:"マサヤ<br>（多すぎなんだよなぁ・・・）"}
+	, {com:"S",  val:"焼肉に誘われた。<br>コミュ力が５上がった！"}
+	, {com:"UP",  knowledge:0, communication:5}
+	, {com:"NEXT"}
+];
+
+var SCENARIO4 = [
+	  {com:"BG", val:"url(./image/bg/bed.jpg)"}
+	, {com:"S",  val:"ある休日。。。"}
+	, {com:"S",  val:"マサヤ<br>（勉強するとは何か。）"}
+	, {com:"S",  val:"マサヤ<br>（それは哲学的なものかもしれない。）"}
+	, {com:"S",  val:"マサヤ<br>（ただがむしゃらに勉強するだけでは、ゲーム業界に行けないのかもしれない。）"}
+	, {com:"S",  val:"マサヤ<br>（しかし、運が良いという理由だけで行けるものなのかもしれない。）"}
+	, {com:"S",  val:"マサヤ<br>（要するに、よくわからん。）"}
+	, {com:"S",  val:"全くもって中身のない自問自答した。<br>知識が５上がった！"}
+	, {com:"UP",  knowledge:5, communication:0}
+	, {com:"NEXT"}
+];
+
+var SCENARIO5 = [
+	  {com:"BG", val:"url(./image/bg/bed.jpg)"}
+	, {com:"S",  val:"ある休日。。。"}
+	, {com:"S",  val:"マサヤ<br>（面接とは何か。）"}
+	, {com:"S",  val:"マサヤ<br>（それは哲学的なものかもしれない。）"}
+	, {com:"S",  val:"マサヤ<br>（「あなたの長所は？」と聞かれて、「ないです。」と答えることは、決してやぶさかではない。）"}
+	, {com:"S",  val:"マサヤ<br>（しかし、そう答えたものなら、確実に落とされるであろう。）"}
+	, {com:"S",  val:"マサヤ<br>（要するに、諸行無常の響きあり。）"}
+	, {com:"S",  val:"全くもって中身のない自問自答した。<br>コミュ力が５上がった！"}
+	, {com:"UP",  knowledge:0, communication:5}
+	, {com:"NEXT"}
+];
+
+var SCENARIO6 = [
+		{com:"BG", val:"url(./image/bg/kyoushitsu1.jpg)"}
+	, {com:"S",  val:"ある日の放課後。。。"}
+	, {com:"S",  val:"マサヤ<br>グガーーーー(zzz)"}
+	, {com:"TS", img:"url(./image/chara/hiroinn1.png)" ,text:"アオイ<br>マサヤくーん。"}
+	, {com:"TS", img:"url(./image/chara/hiroinn2.png)" ,text:"アオイ<br>おーい、起ーきろー。"}
+	, {com:"TS", img:"url(./image/chara/hiroinn2.png)" ,text:"アオイ<br>授業おわったよー。もーしもーし。"}
+	, {com:"TS", img:"url(./image/chara/hiroinn4.png)" ,text:"アオイ<br>（これ絶対起きないやつだー・・・）"}
+	, {com:"TS", img:"url(./image/chara/none.png)" ,text:"３０分後。。。"}
+	, {com:"S", val:"マサヤ<br>よく寝た・・・"}
+	, {com:"S", val:"マサヤ<br>やべぇ・・・教室閉まってる・・・誰か起こしてくれよぉ・・・"}
+	, {com:"S",  val:"がっつり寝てしまった。<br>知識が５下がった！<br>コミュ力が５下がった！"}
+	, {com:"UP",  knowledge:-5, communication:-5}
+	, {com:"NEXT"}
+];
+
+var SCENARIO7 = [
+		{com:"BG", val:"url(./image/bg/ggj.jpg)"}
+	, {com:"S",  val:"ある日。。。"}
+	, {com:"S",  val:"グローバルゲームジャムに参加した。<br>知識が１０上がった！<br>コミュ力が１０上がった！"}
+	, {com:"UP",  knowledge:10, communication:10}
+	, {com:"NEXT"}
+];
+
+var SCENARIO8 = [
+		{com:"BG", val:"url(./image/bg/kansei.jpg)"}
+	, {com:"S",  val:"ある日。。。"}
+	, {com:"S",  val:"神ゲーが完成した。<br>知識が１０上がった！"}
+	, {com:"UP",  knowledge:10, communication:0}
+	, {com:"NEXT"}
 ];
 
 //実際に実行するシナリオ
-var SCENARIO = SCENARIO1;
+var SCENARIO = SCENARIO3;
 
 var Novel = {
 	  cursor: 0
@@ -174,12 +254,15 @@ function DataReceive(){
 	//数値に変換して取得
 	knowledge = parseInt(arr[0],10);
 	communication = parseInt(arr[1],10);
+	mental = parseInt(arr[2],10);
+	hp = parseInt(arr[3],10);
+	count = parseInt(arr[4],10);
 }
 
 //ページを遷移
 function Next(){
 	//データを次のファイルにエスケープして渡す。
-	var data = [knowledge , communication];
+	var data = [knowledge , communication , mental , hp , count];
 	location.href = "./training.html?" + escape(data);
 }
 

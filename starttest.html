@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>starttest</title>
+
+<link href="https://fonts.googleapis.com/earlyaccess/roundedmplus1c.css" rel="stylesheet" />
+<style type="text/css">
+#canvas{
+	width: 800px;
+	height: 600px;
+	border: 1px solid gray;
+}
+#chara{
+  position: absolute;
+  top: 20px;
+  left: 240px;
+
+	width: 300px;
+	height: 300px;
+}
+#text{
+	position: absolute;
+	top: 360px;
+	left: 100px;
+
+	width: 600px;
+	height: 200px;
+	border: 1px solid blue;
+	background-color: rgba(255, 255, 255, 0.86);
+	padding: 10px;
+	user-select: none;
+	font-family: "メイリオ";
+	font-size: 18pt;
+}
+#senntaku{
+	width: 600px;
+	height: 200px;
+}
+</style>
+</head>
+<body>
+<div id="canvas">
+  <div id="chara">
+  </div>
+  <div id="text">
+	</div>
+</div>
+
+<script src="./js/jquery.min.js"></script>
+<script>
+
+var knowledge = 10;
+var communication = 10;
+var mental = 50;
+var hp = 100;
+var count = 0;
+
+var SCENARIO1 = [
+	  {com:"BG", val:"url(./image/bg/kyoushitsu1.jpg)"}
+	, {com:"S",  val:"これは、ゲーム業界を目指すマサヤの物語・・・"}
+	, {com:"TS", img:"url(./image/chara/hiroinn2.png)" ,text:"アオイ<br>ゲーム、スタートぉ！！"}
+	, {com:"NEXT"}
+];
+
+//実際に実行するシナリオ
+var SCENARIO = SCENARIO1;
+
+var Novel = {
+	  cursor: 0
+	, max: 0
+	, init: function(){
+		this.max = SCENARIO.length;
+		this.play();
+	}
+	, play: function(){
+		if( this.cursor >= this.max ){
+			return(false);
+		}
+		switch(SCENARIO[this.cursor].com){
+      // 人物登場
+      case "T":
+        $("#chara").css("background-image", SCENARIO[this.cursor].val);
+        this.cursor++;
+        break;
+			// セリフ再生
+			case "S":
+				$("#text").html(SCENARIO[this.cursor].val);
+				this.cursor++;
+				break;
+			// 人物登場
+	    case "TS":
+	      $("#chara").css("background-image", SCENARIO[this.cursor].img);
+				$("#text").html(SCENARIO[this.cursor].text);
+	      this.cursor++;
+	      break;
+      // ステータス表示
+  		case "STATUS":
+  				$("#text").html(
+						SCENARIO[this.cursor].text + "<br>" +
+						"知識：" + SCENARIO[this.cursor].knowledge + "<br>" +
+						"コミュ力：" + SCENARIO[this.cursor].communication
+					);
+  				this.cursor++;
+  				break;
+			// ステータスアップ
+			case "UP":
+				knowledge += SCENARIO[this.cursor].knowledge;
+				communication += SCENARIO[this.cursor].communication;
+				this.cursor++;
+				break;
+
+			// 背景変更
+			case "BG":
+				$("#canvas").css("background-image", SCENARIO[this.cursor].val);
+				this.cursor++;
+				Novel.play();
+				break;
+
+			// ページを遷移
+			case "NEXT":
+				Next();
+				break;
+			default:
+				break;
+		}
+	}
+};
+
+$(document).ready(function(){
+	Novel.init();
+
+	$("#text")
+		.on("click", function(){
+			Novel.play();
+		});
+});
+
+//ページを遷移
+function Next(){
+	//データを次のファイルにエスケープして渡す。
+	var data = [knowledge , communication , mental , hp , count];
+	location.href = "./training.html?" + escape(data);
+}
+
+</script>
+</body>
+</html>

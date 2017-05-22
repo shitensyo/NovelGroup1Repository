@@ -213,36 +213,46 @@ $(document).ready(function(){
 	$("#text")
 		.on("click", function(){
 			if(selected){
+				//体力が0以下になったらゲームオーバー
 				if(hp <= 0){
 					$("#text").html("疲れ果てたマサヤは退学してしまった！！<br>ゲームオーバー");
 					selected = false;
 				}
-				else {
-					Novel.iconset();
-					$("#status").html(
-								"知識：" + knowledge + "<br>" +
-								"コミュ力：" + communication  + "<br>" +
-								"メンタル：" + mental  + "<br>" +
-								"体力：" + hp);
-					$("#canvas").css("background-image", "url(./image/bg/gakko.jpg)");
-
-					$("#text").html("行動を選んでください。");
-					selected = false;
+				//それ以外は続行
+				else{
 					count++;
-					$("#count").html(CountToYearMounth(count));
+
+					//ランダムでイベント発生
+					if(count%3 == 0 &&  Random(1,10) > 3){
+						Next();
+					}
+					//それ以外は普通に続行
+					else{
+						Novel.iconset();
+						$("#status").html(
+									"知識：" + knowledge + "<br>" +
+									"コミュ力：" + communication  + "<br>" +
+									"メンタル：" + mental  + "<br>" +
+									"体力：" + hp);
+						$("#canvas").css("background-image", "url(./image/bg/gakko.jpg)");
+						$("#text").html("行動を選んでください。");
+						$("#count").html(CountToYearMounth(count));
+						selected = false;
+					}
 				}
 
-				if(count > 36){parseInt(arr[0],10);
+				if(count > 35){
 					//育成のターンがすべて終了
 					//ここでバトルシーンへ移行
-					$("#text").html("バトルシーンへ移行");
+					 ToBattle();
 				}
 			}
 
-			if(!selected)
+			if(hp <= 0 && !selected)
 			{
 				//ゲームオーバー処理
-				//ここでタイトルに戻る
+				//タイトルへ戻る
+				location.href = "./starttest.html?";
 			}
 	});
 });
@@ -254,6 +264,12 @@ function CountToYearMounth(c){
 	var y = Math.floor( c / 12) + 1;
 	var m = c % 12 + 1;
 	return y + "年" + ":" + m + "ヶ月";
+}
+
+//乱数生成関数
+function Random(min,max){
+	tmp_max = max - min + 1;
+	return Math.floor(Math.random() * tmp_max + min);
 }
 
 //遷移時のデータ受け取り
@@ -271,14 +287,22 @@ function DataReceive(){
 	//数値に変換して取得
 	knowledge = parseInt(arr[0],10);
 	communication = parseInt(arr[1],10);
+	mental = parseInt(arr[2],10);
+	hp = parseInt(arr[3],10);
+	count = parseInt(arr[4],10);
 }
 
 
 //ページを遷移
 function Next(){
 	//データを次のファイルにエスケープして渡す。
-	var data = [knowledge , communication];
-	location.href = "./training.html?" + escape(data);
+	var data = [knowledge , communication , mental , hp , count];
+	location.href = "./event.html?" + escape(data);
+}
+function ToBattle(){
+	//データを次のファイルにエスケープして渡す。
+	var data = [knowledge , communication , mental , hp , count];
+	location.href = "./battletest.html?" + escape(data);
 }
 
 </script>
