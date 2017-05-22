@@ -232,7 +232,8 @@ $(document).ready(function(){
 					$("#count").html(CountToYearMounth(count));
 				}
 
-				if(count > 36){
+				if(count > 36){parseInt(arr[0],10);
+					//育成のターンがすべて終了
 					//ここでバトルシーンへ移行
 					$("#text").html("バトルシーンへ移行");
 				}
@@ -240,6 +241,7 @@ $(document).ready(function(){
 
 			if(!selected)
 			{
+				//ゲームオーバー処理
 				//ここでタイトルに戻る
 			}
 	});
@@ -261,14 +263,14 @@ function DataReceive(){
 	//エスケープされた文字をアンエスケープする
 	data = unescape(data);
 	data = String(data);
-
+	//string型を受け取り、,で分割する
 	var arr = "";
 	arr += data;
 	arr = arr.split(",");
-	knowledge = arr[0];
-	communication = arr[1];
 
-	alert(data);
+	//数値に変換して取得
+	knowledge = parseInt(arr[0],10);
+	communication = parseInt(arr[1],10);
 }
 
 

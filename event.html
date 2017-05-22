@@ -163,13 +163,17 @@ function DataReceive(){
 	var data = location.search.substring(1, location.search.length);
 	//エスケープされた文字をアンエスケープする
 	data = unescape(data);
+	//受け渡し用にstring型にする
 	data = String(data);
 
+	//string型を受け取り、,で分割する
 	var arr = "";
 	arr += data;
 	arr = arr.split(",");
-	knowledge = arr[0];
-	communication = arr[1];
+
+	//数値に変換して取得
+	knowledge = parseInt(arr[0],10);
+	communication = parseInt(arr[1],10);
 }
 
 //ページを遷移
