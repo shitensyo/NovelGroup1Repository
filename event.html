@@ -114,7 +114,7 @@ var SCENARIO4 = [
 	, {com:"S",  val:"マサヤ<br>（ただがむしゃらに勉強するだけでは、ゲーム業界に行けないのかもしれない。）"}
 	, {com:"S",  val:"マサヤ<br>（しかし、運が良いという理由だけで行けるものなのかもしれない。）"}
 	, {com:"S",  val:"マサヤ<br>（要するに、よくわからん。）"}
-	, {com:"S",  val:"全くもって中身のない自問自答した。<br>知識が５上がった！"}
+	, {com:"S",  val:"全くもって中身のない自問自答をした。<br>知識が５上がった！"}
 	, {com:"UP",  knowledge:5, communication:0}
 	, {com:"NEXT"}
 ];
@@ -141,6 +141,7 @@ var SCENARIO6 = [
 	, {com:"TS", img:"url(./image/chara/hiroinn2.png)" ,text:"アオイ<br>授業おわったよー。もーしもーし。"}
 	, {com:"TS", img:"url(./image/chara/hiroinn4.png)" ,text:"アオイ<br>（これ絶対起きないやつだー・・・）"}
 	, {com:"TS", img:"url(./image/chara/none.png)" ,text:"３０分後。。。"}
+	, {com:"BG", val:"url(./image/bg/kyoushitsu3.jpg)"}
 	, {com:"S", val:"マサヤ<br>よく寝た・・・"}
 	, {com:"S", val:"マサヤ<br>やべぇ・・・教室閉まってる・・・誰か起こしてくれよぉ・・・"}
 	, {com:"S",  val:"がっつり寝てしまった。<br>知識が５下がった！<br>コミュ力が５下がった！"}
@@ -164,8 +165,16 @@ var SCENARIO8 = [
 	, {com:"NEXT"}
 ];
 
+var SCENARIO9;
+var SCENARIO10;
+var SCENARIO11;
+var SCENARIO12;
+
 //実際に実行するシナリオ
-var SCENARIO = SCENARIO3;
+var SCENARIO = [{com:"BG", val:"url(./image/bg/kyoushitsu1.jpg)"}];
+//シナリオの決定
+var s = 1;
+SCENARIO = SCENARIO1;
 
 var Novel = {
 	  cursor: 0
@@ -228,7 +237,28 @@ var Novel = {
 	}
 };
 
+
+
+
 $(document).ready(function(){
+	s = count / 4;
+	switch (s) {
+		case 1: SCENARIO = SCENARIO1; break;
+		case 2: SCENARIO = SCENARIO2; break;
+		case 3: SCENARIO = SCENARIO3; break;
+		case 4: SCENARIO = SCENARIO4; break;
+		case 5: SCENARIO = SCENARIO5; break;
+		case 6: SCENARIO = SCENARIO6; break;
+		case 7: SCENARIO = SCENARIO7; break;
+		case 8: SCENARIO = SCENARIO8; break;
+		case 9: SCENARIO = SCENARIO9; break;
+		case 10: SCENARIO = SCENARIO10; break;
+		case 11: SCENARIO = SCENARIO11; break;
+		case 12: SCENARIO = SCENARIO12; break;
+		default: SCENARIO = SCENARIO5; break;
+	}
+
+
 	Novel.init();
 
 	$("#text")
@@ -257,6 +287,12 @@ function DataReceive(){
 	mental = parseInt(arr[2],10);
 	hp = parseInt(arr[3],10);
 	count = parseInt(arr[4],10);
+}
+
+//乱数生成関数
+function Random(min,max){
+	tmp_max = max - min + 1;
+	return Math.floor(Math.random() * tmp_max + min);
 }
 
 //ページを遷移

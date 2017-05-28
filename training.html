@@ -112,7 +112,12 @@ var knowledge = 10;
 var communication = 10;
 var mental = 50;
 var hp = 100;
-var count = 0;
+var count = 1;
+
+//イベント発生抽選間隔ターン
+var eventinterval = 4;
+//イベント発生確率(%)
+var toevent = 80;
 
 //読み込み時の処理
 window.onload = DataReceive;
@@ -223,7 +228,7 @@ $(document).ready(function(){
 					count++;
 
 					//ランダムでイベント発生
-					if(count%3 == 0 &&  Random(1,10) > 3){
+					if(count % eventinterval == 0 &&  Random(1,100) <= toevent){
 						Next();
 					}
 					//それ以外は普通に続行
