@@ -57,8 +57,10 @@ var mental = 50;
 var hp = 100;
 var count = 0;
 
+/*
 //読み込み時の処理
 window.onload = DataReceive;
+*/
 
 var SCENARIO1 = [
 	  {com:"BG", val:"url(./image/bg/kyoushitsu1.jpg)"}
@@ -242,6 +244,7 @@ var Novel = {
 
 
 $(document).ready(function(){
+	DataReceive();
 	s = count / 4;
 	switch (s) {
 		case 1: SCENARIO = SCENARIO1; break;
