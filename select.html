@@ -1,0 +1,239 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>バトル</title>
+
+<link href="https://fonts.googleapis.com/earlyaccess/roundedmplus1c.css" rel="stylesheet" />
+<style type="text/css">
+#canvas{
+ 	width: 800px;
+	height: 600px;
+ 	border: 1px solid gray;
+ }
+ #serif{
+ 	position: relative;
+ 	top: 350px;
+ 	left: 100px;
+ 	width: 600px;
+ 	height: 200px;
+ 	border: 1px solid blue;
+ 	background-color: rgba(255, 255, 255, 0.75);
+ 	padding: 10px;
+ 	user-select: none;
+ 	font-family: "Rounded Mplus 1c";
+ 	font-size: 18pt;
+}
+</style>
+</head>
+<body>
+<audio src="./bgm/stream.mp3" autoplay loop></audio>
+<div id="canvas">
+	<div id="serif"></div>
+</div>
+
+<script src="./js/jquery.min.js"></script>
+<script>
+var SCENARIO = [
+	  {com:"BG", val:"url(./image/bg/room1.jpg)"}
+	, {com:"S",  val:"面接官<br>それでは、面接を始めます。よろしくお願いします。"}
+	, {com:"S",  val:"マサヤ<br>よろしくお願いします。"}
+	, {com:"S",  val:"面接官<br>最初にあなたの基礎パラメーターを見せてください。"}
+	, {com:"L"}
+	, {com:"S",  val:"（どうしよう……素直に見せたほうがいいかもしれないけど、パラメーターが低すぎると印象が悪くなるかもしれない）<br> " +
+						"<form>" +
+							  "<input type='button' value='A.盛って見せる' onclick='answer1();'</button> <br>" +
+							  "<input type='button' value='B.素直に見せる' onclick='answer2();'</button>"+
+						"</form>"}
+	, {com:"S",  val:"マサヤ<br>私の基礎パラメータは次の通りになっています。"}
+	, {com:"SP"}
+];
+
+var knowledge     = 55;
+var communication = 15;
+var mental        = 50;
+
+var show_knowledge     = 0;
+var show_communication = 0;
+
+var Novel = {
+	  cursor: 0
+	, max: 0
+	, islock: false
+	, init: function(){
+ 		this.max = SCENARIO.length;
+ 		this.play();
+ 	}
+ 	, play: function(){
+ 		if( this.cursor >= this.max || this.islock == true){
+ 			return(false);
+ 		}
+
+ 		switch(SCENARIO[this.cursor].com){
+ 			// セリフ再生
+ 			case "S":
+ 				$("#serif").html(SCENARIO[this.cursor].val);
+ 				this.cursor++;
+ 				break;
+
+ 			// 背景変更
+ 			case "BG":
+ 				$("#canvas").css("background-image", SCENARIO[this.cursor].val);
+ 				this.cursor++;
+ 				Novel.play();
+ 				break;
+
+			//ロック
+			case "L":
+				this.cursor++;
+				Novel.play();
+				Novel.play_lock();
+				break;
+
+			//パラメーター表示
+			case "SP":
+				$("#serif").html("知識    ：" + show_knowledge + "<br>" +
+								 "コミュ力：" + show_communication);
+				this.cursor++;
+				break;
+
+			//ダメージ
+			case "D":
+				damage(SCENARIO[this.cursor].val);
+				break;
+
+			//次のページにジャンプ
+			case "NEXT":
+        Next();
+				//location.href = "select2.html";
+
+ 			default:
+ 				break;
+ 		}
+ 	}
+	, play_lock: function(){
+		this.islock = true;
+	}
+	, play_unlock: function(){
+		this.islock = false;
+	}
+	, max_reload()
+	{
+		this.max = SCENARIO.length;
+	}
+	, next()
+	{
+		this.cursor++;
+	}
+};
+
+function answer1(){
+	Novel.play_unlock();
+	show_knowledge = knowledge         + 50;
+ 	show_communication = communication + 50;
+
+	if(show_knowledge >= 100 || show_communication >= 100)
+	{
+		SCENARIO.push( {com:"S",  val:"何やら面接官が疑っているように見える。"} );
+		SCENARIO.push( {com:"S",  val:"面接官<br>こんなにパラメーターが高い理由はなんだと思いますか？"} );
+		SCENARIO.push( {com:"S",  val:"マサヤ<br>え、えっと・・・それは・・・"} );
+		SCENARIO.push( {com:"S",  val:"失敗したようだ。"} );
+		SCENARIO.push( {com:"D",  val:10});
+	}
+	else
+	{
+		SCENARIO.push( {com:"S",  val:"面接官<br>なるほど、では次の質問に移ります。"} );
+		SCENARIO.push( {com:"S",  val:"パラメーターに関しては特に問題ないようだ。"} );
+		SCENARIO.push( {com:"S",  val:"盛って見せたのが正解だったようだ。"} );
+		SCENARIO.push( {com:"NEXT"});
+	}
+	Novel.max_reload();
+	Novel.play();
+}
+
+function answer2(){
+	Novel.play_unlock();
+	show_knowledge = knowledge;
+ 	show_communication = communication;
+	if(show_knowledge <= 24 && show_communication <= 24)
+	{
+		SCENARIO.push( {com:"S", val:"何やら面接官の顔が暗い……"} );
+		SCENARIO.push( {com:"S", val:"面接官<br>さすがに低すぎだね。一体いままで何をしてきたのですか？"} );
+		SCENARIO.push( {com:"S", val:"………………"} );
+		SCENARIO.push( {com:"S", val:"嘘も方便、ここは盛るべきだったようだ。"} );
+		SCENARIO.push( {com:"D", val:5});
+	}
+	else
+	{
+		SCENARIO.push( {com:"S",  val:"面接官<br>なるほど、では次の質問に移ります。"} );
+		SCENARIO.push( {com:"S",  val:"パラメーターに関しては特に問題ないようだ。"} );
+		SCENARIO.push( {com:"S",  val:"素直に見せたのが正解のようだ。"} );
+		SCENARIO.push( {com:"NEXT"});
+	}
+	Novel.max_reload();
+	Novel.play();
+}
+
+
+function damage(num)
+{
+	$("#serif").html(num+"のダメージを受けた");
+	mental -= num;
+	if(mental <= 0)
+	{
+		SCENARIO.push({com:"S",  val:"余りのショックの余り、マサヤは倒れてしまった"});
+		SCENARIO.push({com:"S",  val:"ゲームオーバー"});
+		SCENARIO.push({com:"L"});
+	}
+	else
+	{
+		SCENARIO.push( {com:"NEXT"});
+	}
+	Novel.max_reload();
+	Novel.next();
+}
+
+
+
+//遷移時のデータ受け取り
+function DataReceive(){
+	//?以降の文字を取得する
+	var data = location.search.substring(1, location.search.length);
+	//エスケープされた文字をアンエスケープする
+	data = unescape(data);
+	//受け渡し用にstring型にする
+	data = String(data);
+
+	//string型を受け取り、,で分割する
+	var arr = "";
+	arr += data;
+	arr = arr.split(",");
+
+	//数値に変換して取得
+	knowledge = parseInt(arr[0],10);
+	communication = parseInt(arr[1],10);
+	mental = parseInt(arr[2],10);
+}
+
+//ページを遷移
+function Next(){
+	//データを次のファイルにエスケープして渡す。
+	var data = [knowledge , communication , mental];
+	location.href = "./select2.html?" + escape(data);
+}
+
+$(document).ready(function(){
+  DataReceive();
+	Novel.init();
+
+ 	$("#serif")
+ 		.on("click", function(){
+ 			Novel.play();
+ 		});
+});
+
+
+
+</script>
+</body>
+</html>

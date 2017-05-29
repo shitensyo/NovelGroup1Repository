@@ -1,0 +1,210 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>バトル</title>
+
+<link href="https://fonts.googleapis.com/earlyaccess/roundedmplus1c.css" rel="stylesheet" />
+<style type="text/css">
+#canvas{
+ 	width: 800px;
+	height: 600px;
+ 	border: 1px solid gray;
+ }
+ #serif{
+ 	position: relative;
+ 	top: 350px;
+ 	left: 100px;
+ 	width: 600px;
+ 	height: 200px;
+ 	border: 1px solid blue;
+ 	background-color: rgba(255, 255, 255, 0.75);
+ 	padding: 10px;
+ 	user-select: none;
+ 	font-family: "Rounded Mplus 1c";
+ 	font-size: 18pt;
+}
+</style>
+</head>
+<body>
+<audio src="./bgm/stream.mp3" autoplay loop></audio>
+<div id="canvas">
+	<div id="serif"></div>
+</div>
+
+<script src="./js/jquery.min.js"></script>
+<script>
+var SCENARIO = [
+	  {com:"BG", val:"url(./image/bg/room2.jpg)"}
+	, {com:"S",  val:"面接官<br>では、質問に移ります。"}
+	, {com:"S",  val:"面接官<br>あなたを動物に例えるとしたら何でしょう。"}
+	, {com:"L"}
+	, {com:"S",  val:"（動物か・・・どっちにしよう）<br> " +
+						"<form>" +
+							  "<input type='button' value='A.行動がとにかく速い猪' onclick='answer1();'</button> <br>" +
+							  "<input type='button' value='B.確実な一歩を進んでいく象' onclick='answer2();'</button>"+
+						"</form>"}
+	, {com:"S", val:"面接官<br>それは何故でしょうか。"}
+	, {com:"S", val:"マサヤ<br>それは……"}
+	, {com:"S", val:"……"}
+];
+
+var knowledge     = 55;
+var communication = 15;
+var mental        = 50;
+
+var show_knowledge     = 0;
+var show_communication = 0;
+
+var Novel = {
+	  cursor: 0
+	, max: 0
+	, islock: false
+	, init: function(){
+ 		this.max = SCENARIO.length;
+ 		this.play();
+ 	}
+ 	, play: function(){
+ 		if( this.cursor >= this.max || this.islock == true){
+ 			return(false);
+ 		}
+
+ 		switch(SCENARIO[this.cursor].com){
+ 			// セリフ再生
+ 			case "S":
+ 				$("#serif").html(SCENARIO[this.cursor].val);
+ 				this.cursor++;
+ 				break;
+
+ 			// 背景変更
+ 			case "BG":
+ 				$("#canvas").css("background-image", SCENARIO[this.cursor].val);
+ 				this.cursor++;
+ 				Novel.play();
+ 				break;
+
+			//ロック
+			case "L":
+				this.cursor++;
+				Novel.play();
+				Novel.play_lock();
+				break;
+
+			//ダメージ
+			case "D":
+				damage(SCENARIO[this.cursor].val);
+				break;
+
+			//次のページにジャンプ
+			case "END":
+				SCENARIO.push( {com:"S", val:"体験版はこれで終わりです。<br>続きは製品版をお楽しみください。"});
+				SCENARIO.push( {com:"S", val:"(製品版を作るとは言っていない)<br><br> - 完 -"});
+				Novel.max_reload();
+				this.cursor++;
+				Novel.play();
+				break;
+
+ 			default:
+ 				break;
+ 		}
+ 	}
+	, play_lock: function(){
+		this.islock = true;
+	}
+	, play_unlock: function(){
+		this.islock = false;
+	}
+	, max_reload()
+	{
+		this.max = SCENARIO.length;
+	}
+	, next()
+	{
+		this.cursor++;
+	}
+	, prev()
+	{
+		this.cursor--;
+	}
+};
+
+function answer1(){
+	Novel.play_unlock();
+		SCENARIO.push( {com:"S", val:"どうやら企業が求めている人物象と合致するようだ。"} );
+		SCENARIO.push( {com:"S", val:"面接官<br>……では　次の質問です……"} );
+		SCENARIO.push( {com:"S", val:"マサヤ<br>よっしゃこのままいくぜええええ"} );
+		SCENARIO.push( {com:"S", val:"面接官<br>……"} );
+		SCENARIO.push( {com:"S", val:"面接官<br>……さきほどの質問聞いてましたか？"} );
+		SCENARIO.push( {com:"S", val:"しまったああああああああああああああああああああああ"} );
+		SCENARIO.push( {com:"D", val:10000});
+	Novel.max_reload();
+	Novel.prev();
+	Novel.play();
+}
+
+function answer2(){
+	Novel.play_unlock();
+		SCENARIO.push( {com:"S", val:"どうやら企業が求めている人物象と合致しなかったようだ。"} );
+		SCENARIO.push( {com:"D", val:2000});
+	Novel.max_reload();
+	Novel.prev();
+	Novel.play();
+}
+
+function damage(num)
+{
+	$("#serif").html(num+"のダメージを受けた");
+	mental -= num;
+	if(mental <= 0)
+	{
+		SCENARIO.push( {com:"S",  val:"余りのショックの余り、マサヤは倒れてしまった"});
+		SCENARIO.push( {com:"END"});
+	}
+	else
+	{
+		SCENARIO.push( {com:"END"});
+	}
+	Novel.max_reload();
+	Novel.next();
+}
+
+$(document).ready(function(){
+  DataReceive();
+	Novel.init();
+
+ 	$("#serif")
+ 		.on("click", function(){
+ 			Novel.play();
+ 		});
+});
+
+//遷移時のデータ受け取り
+function DataReceive(){
+	//?以降の文字を取得する
+	var data = location.search.substring(1, location.search.length);
+	//エスケープされた文字をアンエスケープする
+	data = unescape(data);
+	//受け渡し用にstring型にする
+	data = String(data);
+
+	//string型を受け取り、,で分割する
+	var arr = "";
+	arr += data;
+	arr = arr.split(",");
+
+	//数値に変換して取得
+	knowledge = parseInt(arr[0],10);
+	communication = parseInt(arr[1],10);
+	mental = parseInt(arr[2],10);
+}
+
+//ページを遷移
+function Next(){
+	//データを次のファイルにエスケープして渡す。
+	var data = [knowledge , communication , mental];
+	location.href = "./starttest.html?" + escape(data);
+}
+
+</script>
+</body>
+</html>
