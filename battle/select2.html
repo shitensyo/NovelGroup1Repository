@@ -43,6 +43,9 @@ var SCENARIO = [
 							  "<input type='button' value='A.行動がとにかく速い猪' onclick='answer1();'</button> <br>" +
 							  "<input type='button' value='B.確実な一歩を進んでいく象' onclick='answer2();'</button>"+
 						"</form>"}
+	, {com:"S", val:"面接官<br>それは何故でしょうか。"}
+	, {com:"S", val:"マサヤ<br>それは……"}
+	, {com:"S", val:"……"} 
 ]; 
 
 var knowledge     = 55;
@@ -86,13 +89,6 @@ var Novel = {
 				Novel.play_lock();
 				break;
 			
-			//パラメーター表示
-			case "SP":
-				$("#serif").html("知識    ：" + show_knowledge + "<br>" +
-								 "コミュ力：" + show_communication);
-				this.cursor++; 
-				break;
-			
 			//ダメージ
 			case "D":
 				damage(SCENARIO[this.cursor].val);
@@ -103,6 +99,7 @@ var Novel = {
 				SCENARIO.push( {com:"S", val:"体験版はこれで終わりです。<br>続きは製品版をお楽しみください。"});
 				SCENARIO.push( {com:"S", val:"(製品版を作るとは言っていない)<br><br> - 完 -"});
 				Novel.max_reload();
+				this.cursor++;
 				Novel.play();
 				break;
 	
@@ -124,31 +121,32 @@ var Novel = {
 	{
 		this.cursor++;
 	}
+	, prev()
+	{
+		this.cursor--;
+	}
 }; 
 
 function answer1(){
 	Novel.play_unlock();
-		SCENARIO.push( {com:"S", val:"面接官<br>それは何故でしょうか。"} );
-		SCENARIO.push( {com:"S", val:"マサヤ<br>それは……"} );
-		SCENARIO.push( {com:"S", val:"……"} );
 		SCENARIO.push( {com:"S", val:"どうやら企業が求めている人物象と合致するようだ。"} );
+		SCENARIO.push( {com:"S", val:"面接官<br>……では　次の質問です……"} );
 		SCENARIO.push( {com:"S", val:"マサヤ<br>よっしゃこのままいくぜええええ"} );
-		SCENERIO.push( {com:"S", val:"面接官<br>……さきほどの質問聞いてましたか？"} );
-		SCENERIO.push( {com:"S", val:"しまったああああああああああああああああああああああ"} );
+		SCENARIO.push( {com:"S", val:"面接官<br>……"} );
+		SCENARIO.push( {com:"S", val:"面接官<br>……さきほどの質問聞いてましたか？"} );
+		SCENARIO.push( {com:"S", val:"しまったああああああああああああああああああああああ"} );
 		SCENARIO.push( {com:"D", val:10000});
 	Novel.max_reload();
+	Novel.prev();
 	Novel.play();
 }
 
 function answer2(){
 	Novel.play_unlock();
-		SCENARIO.push( {com:"S", val:"面接官<br>それは何故でしょうか。"} );
-		SCENARIO.push( {com:"S", val:"マサヤ<br>それは……"} );
-		SCENARIO.push( {com:"S", val:"……"} );
 		SCENARIO.push( {com:"S", val:"どうやら企業が求めている人物象と合致しなかったようだ。"} );
-		SCENARIO.push( {com:"D", val:10000});
-
+		SCENARIO.push( {com:"D", val:2000});
 	Novel.max_reload();
+	Novel.prev();
 	Novel.play();
 }
 
