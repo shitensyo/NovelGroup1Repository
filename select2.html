@@ -153,11 +153,11 @@ function answer2(){
 
 function damage(num)
 {
-	$("#serif").html(num+"のダメージを受けた");
+	$("#serif").html(num+"の精神ダメージを受けた");
 	mental -= num;
 	if(mental <= 0)
 	{
-		SCENARIO.push( {com:"S",  val:"余りのショックの余り、マサヤは倒れてしまった"});
+		SCENARIO.push( {com:"S",  val:"ショックの余り、マサヤは倒れてしまった"});
 		SCENARIO.push( {com:"END"});
 	}
 	else
