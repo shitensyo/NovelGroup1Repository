@@ -123,6 +123,10 @@ var Novel = {
 	{
 		this.cursor++;
 	}
+	, prev()
+	{
+		this.cursor--;
+	}
 }; 
 
 function answer1(){
@@ -146,6 +150,7 @@ function answer1(){
 		SCENARIO.push( {com:"NEXT"});
 	}
 	Novel.max_reload();
+	Novel.prev();
 	Novel.play();
 }
 
@@ -169,6 +174,7 @@ function answer2(){
 		SCENARIO.push( {com:"NEXT"});
 	}
 	Novel.max_reload();
+	Novel.prev();
 	Novel.play();
 }
 

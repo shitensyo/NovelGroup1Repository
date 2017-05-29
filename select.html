@@ -129,16 +129,16 @@ var Novel = {
 
 function answer1(){
 	Novel.play_unlock();
-	show_knowledge = knowledge         + 50;
- 	show_communication = communication + 50;
+	show_knowledge = knowledge         + 100;
+ 	show_communication = communication + 100;
 
-	if(show_knowledge >= 100 || show_communication >= 100)
+	if(show_knowledge >= 200 || show_communication >= 200)
 	{
 		SCENARIO.push( {com:"S",  val:"何やら面接官が疑っているように見える。"} );
 		SCENARIO.push( {com:"S",  val:"面接官<br>こんなにパラメーターが高い理由はなんだと思いますか？"} );
 		SCENARIO.push( {com:"S",  val:"マサヤ<br>え、えっと・・・それは・・・"} );
 		SCENARIO.push( {com:"S",  val:"失敗したようだ。"} );
-		SCENARIO.push( {com:"D",  val:10});
+		SCENARIO.push( {com:"D",  val:100});
 	}
 	else
 	{
@@ -155,13 +155,13 @@ function answer2(){
 	Novel.play_unlock();
 	show_knowledge = knowledge;
  	show_communication = communication;
-	if(show_knowledge <= 24 && show_communication <= 24)
+	if(show_knowledge <= 80 && show_communication <= 80)
 	{
 		SCENARIO.push( {com:"S", val:"何やら面接官の顔が暗い……"} );
 		SCENARIO.push( {com:"S", val:"面接官<br>さすがに低すぎだね。一体いままで何をしてきたのですか？"} );
 		SCENARIO.push( {com:"S", val:"………………"} );
 		SCENARIO.push( {com:"S", val:"嘘も方便、ここは盛るべきだったようだ。"} );
-		SCENARIO.push( {com:"D", val:5});
+		SCENARIO.push( {com:"D", val:50});
 	}
 	else
 	{
@@ -177,11 +177,11 @@ function answer2(){
 
 function damage(num)
 {
-	$("#serif").html(num+"のダメージを受けた");
+	$("#serif").html(num+"の精神ダメージを受けた");
 	mental -= num;
 	if(mental <= 0)
 	{
-		SCENARIO.push({com:"S",  val:"余りのショックの余り、マサヤは倒れてしまった"});
+		SCENARIO.push({com:"S",  val:"ショックの余り、マサヤは倒れてしまった"});
 		SCENARIO.push({com:"S",  val:"ゲームオーバー"});
 		SCENARIO.push({com:"L"});
 	}
