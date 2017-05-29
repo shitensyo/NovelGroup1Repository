@@ -87,6 +87,7 @@
 </style>
 </head>
 <body>
+<audio src="./bgm/clap.mp3" autoplay loop></audio>
 <div id="canvas">
   <div id="status">
   </div>
@@ -114,13 +115,12 @@ var mental = 50;
 var hp = 100;
 var count = 1;
 
+
+
 //イベント発生抽選間隔ターン
 var eventinterval = 4;
 //イベント発生確率(%)
 var toevent = 80;
-
-//読み込み時の処理
-window.onload = DataReceive;
 
 
 var Novel = {
@@ -137,7 +137,6 @@ var Novel = {
 		$("#count").html(CountToYearMounth(count));
 		$("#text").html("行動を選んでください。");
 		this.iconset();
-
 		this.play();
 		}
 	, play: function(){
@@ -161,6 +160,11 @@ var Novel = {
 var selected = false;
 
 $(document).ready(function(){
+	/*
+	//読み込み時の処理
+	window.onload = DataReceive;
+	*/
+	DataReceive();
 	Novel.init();
 
 	$("#study")
@@ -264,6 +268,7 @@ $(document).ready(function(){
 
 //countを年月(文字列)に変換
 function CountToYearMounth(c){
+	c -= 1;
 	if(c > 35)
 		c = 35;
 	var y = Math.floor( c / 12) + 1;
