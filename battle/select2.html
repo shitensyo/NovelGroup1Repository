@@ -101,9 +101,11 @@ var Novel = {
 			//次のページにジャンプ
 			case "END":
 				SCENARIO.push( {com:"S", val:"体験版はこれで終わりです。<br>続きは製品版をお楽しみください。"});
-				SCENARIO.push( {com:"L"} );
 				SCENARIO.push( {com:"S", val:"(製品版を作るとは言っていない)<br><br> - 完 -"});
 				Novel.max_reload();
+				Novel.play();
+				break;
+	
  			default: 
  				break;
  		} 
@@ -130,7 +132,7 @@ function answer1(){
 		SCENARIO.push( {com:"S", val:"マサヤ<br>それは……"} );
 		SCENARIO.push( {com:"S", val:"……"} );
 		SCENARIO.push( {com:"S", val:"どうやら企業が求めている人物象と合致するようだ。"} );
-		SCENARIO.push( {com:"S", val:"マサヤ<br>よっしゃこのままいくぜ"}
+		SCENARIO.push( {com:"S", val:"マサヤ<br>よっしゃこのままいくぜええええ"} );
 		SCENERIO.push( {com:"S", val:"面接官<br>……さきほどの質問聞いてましたか？"} );
 		SCENERIO.push( {com:"S", val:"しまったああああああああああああああああああああああ"} );
 		SCENARIO.push( {com:"D", val:10000});
@@ -156,9 +158,8 @@ function damage(num)
 	mental -= num;
 	if(mental <= 0)
 	{
-		SCENARIO.push({com:"S",  val:"余りのショックの余り、マサヤは倒れてしまった"});
-		SCENARIO.push({com:"S",  val:"ゲームオーバー"});
-		SCENARIO.push({com:"L"});
+		SCENARIO.push( {com:"S",  val:"余りのショックの余り、マサヤは倒れてしまった"});
+		SCENARIO.push( {com:"END"});
 	}
 	else
 	{
