@@ -1,55 +1,181 @@
-<html>
+﻿<!DOCTYPE html> 
+<html lang="ja"> 
+<head> 
+<meta charset="UTF-8"> 
+<title>バトル-選択２</title> 
 
-    <head>
-        <title>	�I�� </title>
-				
-        <!---->
-        <!--�X�^�C���V�[�g�̕ҏW-->
-        <style type="text/css">
-            #bg{
-                border: 1px solid gray;
-                width: 800px;
-                height: 600px;
-                background-image: url(../image/bg/BG001.jpg);
-            }
+<link href="https://fonts.googleapis.com/earlyaccess/roundedmplus1c.css" rel="stylesheet" /> 
+<style type="text/css"> 
+#canvas{ 
+ 	width: 800px; 
+	height: 600px; 
+ 	border: 1px solid gray; 
+ } 
+ #serif{ 
+ 	position: relative; 
+ 	top: 350px; 
+ 	left: 100px; 
+ 	width: 600px; 
+ 	height: 200px; 
+ 	border: 1px solid blue;	 
+ 	background-color: rgba(255, 255, 255, 0.75); 
+ 	padding: 10px; 
+ 	user-select: none; 
+ 	font-family: "Rounded Mplus 1c"; 
+ 	font-size: 18pt; 
+} 
+</style> 
+</head> 
+<body> 
+<div id="canvas"> 
+	<div id="serif"></div> 
+</div> 
 
-            #serifu{
-                border: 1px solid blue;
-                width: 700px;
-                height: 230px;
+<script src="../js/jquery.min.js"></script> 
+<script> 
+var SCENARIO = [ 
+	  {com:"BG", val:"url(../image/bg/room2.jpg)"} 
+	, {com:"S",  val:"面接官<br>では、質問に移ります。"}
+	, {com:"S",  val:"面接官<br>あなたを動物に例えるとしたら何でしょう。"}
+	, {com:"L"}
+	, {com:"S",  val:"（動物か・・・どっちにしよう）<br> " + 
+						"<form>" +
+							  "<input type='button' value='A.行動がとにかく速い猪' onclick='answer1();'</button> <br>" +
+							  "<input type='button' value='B.確実な一歩を進んでいく象' onclick='answer2();'</button>"+
+						"</form>"}
+]; 
 
-                position: relative;
-                top: 350px;
-                left: 50px;
+var knowledge     = 55;
+var communication = 15;
+var mental        = 50;
 
-                background-color: rgba(255,255,255,0.7);
-            }
-        </style>
+var show_knowledge     = 0;
+var show_communication = 0;
 
-				<script src="js/jquery.min.js"></script>
-        <script>
-            function answer1(){
-								location.href = "gameclear.html";
-						}
-						
-						function answer2(){
-								location.href = "gameover.html"
-						}
-        </script>
-    </head>
+var Novel = { 
+	  cursor: 0 
+	, max: 0 
+	, islock: false
+	, init: function(){ 
+ 		this.max = SCENARIO.length; 
+ 		this.play(); 
+ 	} 
+ 	, play: function(){ 
+ 		if( this.cursor >= this.max || this.islock == true){ 
+ 			return(false); 
+ 		} 
+  
+ 		switch(SCENARIO[this.cursor].com){ 
+ 			// セリフ再生 
+ 			case "S": 
+ 				$("#serif").html(SCENARIO[this.cursor].val); 
+ 				this.cursor++; 
+ 				break; 
+  
+ 			// 背景変更 
+ 			case "BG": 
+ 				$("#canvas").css("background-image", SCENARIO[this.cursor].val); 
+ 				this.cursor++; 
+ 				Novel.play(); 
+ 				break; 
+ 			
+			//ロック
+			case "L":
+				this.cursor++;
+				Novel.play();
+				Novel.play_lock();
+				break;
+			
+			//パラメーター表示
+			case "SP":
+				$("#serif").html("知識    ：" + show_knowledge + "<br>" +
+								 "コミュ力：" + show_communication);
+				this.cursor++; 
+				break;
+			
+			//ダメージ
+			case "D":
+				damage(SCENARIO[this.cursor].val);
+				break;
+			
+			//次のページにジャンプ
+			case "END":
+				SCENARIO.push( {com:"S", val:"体験版はこれで終わりです。<br>続きは製品版をお楽しみください。"});
+				SCENARIO.push( {com:"L"} );
+				SCENARIO.push( {com:"S", val:"(製品版を作るとは言っていない)<br><br> - 完 -"});
+				Novel.max_reload();
+ 			default: 
+ 				break;
+ 		} 
+ 	} 
+	, play_lock: function(){
+		this.islock = true;
+	}
+	, play_unlock: function(){
+		this.islock = false;
+	}
+	, max_reload()
+	{
+		this.max = SCENARIO.length;
+	}
+	, next()
+	{
+		this.cursor++;
+	}
+}; 
 
-    <body>
-        <div id="bg">						
-            <div id="serifu">
-						�ʐڊ��u�S�~�v<br>
-						&lt2/2&gt
-								<form>
-									  <input type="button" value="�Ԃ񉣂�" onclick="answer1();"</button> <br>
-									  <input type="button" value="�Ȃɂ����Ȃ�" onclick="answer2();"</button>
-								</form>
-						</div>
-        </div>
-		
-    </body>
+function answer1(){
+	Novel.play_unlock();
+		SCENARIO.push( {com:"S", val:"面接官<br>それは何故でしょうか。"} );
+		SCENARIO.push( {com:"S", val:"マサヤ<br>それは……"} );
+		SCENARIO.push( {com:"S", val:"……"} );
+		SCENARIO.push( {com:"S", val:"どうやら企業が求めている人物象と合致するようだ。"} );
+		SCENARIO.push( {com:"S", val:"マサヤ<br>よっしゃこのままいくぜ"}
+		SCENERIO.push( {com:"S", val:"面接官<br>……さきほどの質問聞いてましたか？"} );
+		SCENERIO.push( {com:"S", val:"しまったああああああああああああああああああああああ"} );
+		SCENARIO.push( {com:"D", val:10000});
+	Novel.max_reload();
+	Novel.play();
+}
 
-</html>
+function answer2(){
+	Novel.play_unlock();
+		SCENARIO.push( {com:"S", val:"面接官<br>それは何故でしょうか。"} );
+		SCENARIO.push( {com:"S", val:"マサヤ<br>それは……"} );
+		SCENARIO.push( {com:"S", val:"……"} );
+		SCENARIO.push( {com:"S", val:"どうやら企業が求めている人物象と合致しなかったようだ。"} );
+		SCENARIO.push( {com:"D", val:10000});
+
+	Novel.max_reload();
+	Novel.play();
+}
+
+function damage(num)
+{
+	$("#serif").html(num+"のダメージを受けた");
+	mental -= num;
+	if(mental <= 0)
+	{
+		SCENARIO.push({com:"S",  val:"余りのショックの余り、マサヤは倒れてしまった"});
+		SCENARIO.push({com:"S",  val:"ゲームオーバー"});
+		SCENARIO.push({com:"L"});
+	}
+	else
+	{
+		SCENARIO.push( {com:"END"});
+	}
+	Novel.max_reload();
+	Novel.next();
+}
+
+$(document).ready(function(){ 
+	Novel.init(); 
+ 	 
+ 	$("#serif") 
+ 		.on("click", function(){ 
+ 			Novel.play(); 
+ 		}); 
+}); 
+</script> 
+</body> 
+</html> 
